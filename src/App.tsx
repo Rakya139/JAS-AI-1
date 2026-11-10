@@ -5,6 +5,7 @@ import {
   Mic, Search, Settings, Plus, Send, Menu,
   BrainCircuit, Globe, Paperclip, Loader2
 } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
 
 type ChatMessage = {
   role: 'user' | 'assistant'
@@ -149,7 +150,9 @@ export default function App() {
               {messages.map((item, index) => (
                 <div className={`chat-message ${item.role}`} key={index}>
                   <strong>{item.role === 'user' ? 'You' : 'JAS AI'}</strong>
-                  <p>{item.content}</p>
+                  <div className="markdown-content">
+  <ReactMarkdown>{item.content}</ReactMarkdown>
+</div>
                 </div>
               ))}
               {loading && (
