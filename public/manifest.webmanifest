@@ -1,0 +1,11 @@
+
+{
+  "name": "JAS AI Enterprise",
+  "short_name": "JAS AI",
+  "description": "Your intelligent AI workspace.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080a12",
+  "theme_color": "#080a12",
+  "orientation": "portrait"
+}
