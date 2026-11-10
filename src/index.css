@@ -336,3 +336,105 @@ h1 span {
   h1 { letter-spacing: -2px; }
   .subtitle { font-size: 12px; }
 }
+
+/* JAS AI Premium Chat Upgrade */
+
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 0 30px;
+  min-height: 250px;
+}
+
+.chat-message {
+  max-width: 85%;
+  padding: 15px 18px;
+  border-radius: 18px;
+  line-height: 1.7;
+  font-size: 14px;
+  animation: messageAppear .25s ease-out;
+}
+
+.chat-message.user {
+  align-self: flex-end;
+  color: #fff;
+  background: linear-gradient(135deg, #6556dc, #397edb);
+  border-bottom-right-radius: 5px;
+}
+
+.chat-message.assistant {
+  align-self: flex-start;
+  color: #eef0ff;
+  background: linear-gradient(145deg, #192239, #111827);
+  border: 1px solid #303b57;
+  border-bottom-left-radius: 5px;
+}
+
+.chat-message strong {
+  display: block;
+  color: #a99bff;
+  font-size: 11px;
+  letter-spacing: .8px;
+  margin-bottom: 7px;
+}
+
+.chat-message.user strong {
+  color: #dcd7ff;
+}
+
+.chat-message p {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.error-message {
+  color: #ff8585;
+  background: #351c27;
+  border: 1px solid #713747;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 12px;
+}
+
+.send-button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.spinner {
+  animation: jasSpin 1s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes jasSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes messageAppear {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chat-messages {
+  max-height: 65vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #55518c transparent;
+}
+
+@media (max-width: 480px) {
+  .chat-message {
+    max-width: 94%;
+    font-size: 13px;
+    padding: 13px 15px;
+  }
+  }
+  
