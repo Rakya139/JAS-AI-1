@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Sparkles, MessageSquare, Code2, Image, Video,
   Mic, Search, Settings, Plus, Send, Menu,
@@ -24,7 +24,17 @@ export default function App() {
   const [message, setMessage] = useState('')
   const [active, setActive] = useState('AI Assistant')
   const [sidebar, setSidebar] = useState(true)
-  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [messages, setMessages] = useState<ChatMessage[]>(() => {
+  try {
+    const saved = localStorage.getItem('jas-ai-chat')
+    return saved ? JSON.parse(saved) as ChatMessage[] : []
+  } catch {
+    return []
+  }
+})
+  useEffect(() => {
+  localStorage.setItem('jas-ai-chat', JSON.stringify(messages))
+}, [messages])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
