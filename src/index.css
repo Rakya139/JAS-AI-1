@@ -579,3 +579,24 @@ h1 span {
     min-height: 42px;
   }
 }
+.floating-menu-toggle {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .floating-menu-toggle {
+    display: grid;
+    place-items: center;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 2000;
+    width: 48px;
+    height: 48px;
+    border: 1px solid #566080;
+    border-radius: 12px;
+    color: #fff;
+    background: #252c48;
+    box-shadow: 0 5px 20px #0008;
+  }
+}
