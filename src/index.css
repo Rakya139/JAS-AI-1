@@ -552,3 +552,30 @@ h1 span {
     place-items: center;
   }
   }
+@media (max-width: 700px) {
+  .sidebar {
+    z-index: 5;
+  }
+
+  .main-area {
+    padding-top: 68px;
+  }
+
+  .topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: #0b0e19;
+  }
+
+  .icon-button {
+    position: relative;
+    z-index: 1001;
+    color: white;
+    background: #252c48;
+    min-width: 42px;
+    min-height: 42px;
+  }
+}
