@@ -532,3 +532,23 @@ h1 span {
 .markdown-content th {
   background: #252c48;
   }
+/* Fix mobile menu toggle visibility */
+@media (max-width: 700px) {
+  .topbar {
+    position: relative;
+    z-index: 6;
+  }
+
+  .icon-button {
+    position: relative;
+    z-index: 7;
+    color: #ffffff;
+    background: #252c48;
+    border: 1px solid #566080;
+    border-radius: 10px;
+    min-width: 42px;
+    min-height: 42px;
+    display: grid;
+    place-items: center;
+  }
+  }
