@@ -79,6 +79,13 @@ export default function App() {
 
   return (
     <main className="app">
+      <button
+  className="floating-menu-toggle"
+  onClick={() => setSidebar(!sidebar)}
+  aria-label="Toggle menu"
+>
+  <Menu size={24} />
+</button>
       <aside className={sidebar ? 'sidebar' : 'sidebar hidden'}>
         <div className="brand">
           <div className="brand-icon"><Sparkles /></div>
