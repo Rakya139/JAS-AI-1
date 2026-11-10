@@ -3,8 +3,13 @@ import { useState } from 'react'
 import {
   Sparkles, MessageSquare, Code2, Image, Video,
   Mic, Search, Settings, Plus, Send, Menu,
-  BrainCircuit, Globe, Paperclip
+  BrainCircuit, Globe, Paperclip, Loader2
 } from 'lucide-react'
+
+type ChatMessage = {
+  role: 'user' | 'assistant'
+  content: string
+}
 
 const features = [
   { icon: BrainCircuit, name: 'AI Assistant', desc: 'Think, learn and solve complex problems' },
@@ -19,6 +24,47 @@ export default function App() {
   const [message, setMessage] = useState('')
   const [active, setActive] = useState('AI Assistant')
   const [sidebar, setSidebar] = useState(true)
+  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  async function sendMessage() {
+    const text = message.trim()
+    if (!text || loading) return
+
+    const updated: ChatMessage[] = [
+      ...messages,
+      { role: 'user', content: text }
+    ]
+
+    setMessages(updated)
+    setMessage('')
+    setError('')
+    setLoading(true)
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: updated })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Something went wrong.')
+      }
+
+      setMessages([
+        ...updated,
+        { role: 'assistant', content: data.reply }
+      ])
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not connect to JAS AI.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <main className="app">
@@ -28,7 +74,11 @@ export default function App() {
           <div><strong>JAS AI</strong><small>ENTERPRISE</small></div>
         </div>
 
-        <button className="new-chat" onClick={() => setMessage('')}>
+        <button className="new-chat" onClick={() => {
+          setMessages([])
+          setMessage('')
+          setError('')
+        }}>
           <Plus size={18} /> New conversation
         </button>
 
@@ -62,41 +112,72 @@ export default function App() {
         </header>
 
         <div className="content">
-          <div className="welcome">
-            <div className="welcome-icon"><Sparkles size={25} /></div>
-            <p className="eyebrow">YOUR INTELLIGENT WORKSPACE</p>
-            <h1>Imagine what's<br /><span>possible.</span></h1>
-            <p className="subtitle">
-              Meet JAS AI. One workspace for thinking, creating,
-              researching and building extraordinary things.
-            </p>
-          </div>
+          {messages.length === 0 ? (
+            <>
+              <div className="welcome">
+                <div className="welcome-icon"><Sparkles size={25} /></div>
+                <p className="eyebrow">YOUR INTELLIGENT WORKSPACE</p>
+                <h1>Imagine what's<br /><span>possible.</span></h1>
+                <p className="subtitle">
+                  Meet JAS AI. One workspace for thinking, creating,
+                  researching and building extraordinary things.
+                </p>
+              </div>
 
-          <div className="feature-grid">
-            {features.map(({ icon: Icon, name, desc }) => (
-              <button className="feature-card" key={name} onClick={() => setActive(name)}>
-                <div className="feature-icon"><Icon size={21} /></div>
-                <strong>{name}</strong>
-                <small>{desc}</small>
-              </button>
-            ))}
-          </div>
+              <div className="feature-grid">
+                {features.map(({ icon: Icon, name, desc }) => (
+                  <button className="feature-card" key={name} onClick={() => setActive(name)}>
+                    <div className="feature-icon"><Icon size={21} /></div>
+                    <strong>{name}</strong>
+                    <small>{desc}</small>
+                  </button>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="chat-messages">
+              {messages.map((item, index) => (
+                <div className={`chat-message ${item.role}`} key={index}>
+                  <strong>{item.role === 'user' ? 'You' : 'JAS AI'}</strong>
+                  <p>{item.content}</p>
+                </div>
+              ))}
+              {loading && (
+                <div className="chat-message assistant">
+                  <strong>JAS AI</strong>
+                  <p><Loader2 size={16} className="spinner" /> Thinking...</p>
+                </div>
+              )}
+              {error && <p className="error-message">{error}</p>}
+            </div>
+          )}
 
           <div className="composer">
             <textarea
               value={message}
               onChange={e => setMessage(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault()
+                  sendMessage()
+                }
+              }}
               placeholder={`Message JAS AI in ${active}...`}
               rows={2}
             />
             <div className="composer-bottom">
-              <div><button className="tool-button"><Paperclip size={17} /></button>
-                <span>AI-powered workspace</span></div>
+              <div>
+                <button className="tool-button" aria-label="Attachments"><Paperclip size={17} /></button>
+                <span>AI-powered workspace</span>
+              </div>
               <button
                 className="send-button"
-                onClick={() => setMessage('')}
+                onClick={sendMessage}
+                disabled={loading || !message.trim()}
                 aria-label="Send message"
-              ><Send size={18} /></button>
+              >
+                {loading ? <Loader2 size={18} className="spinner" /> : <Send size={18} />}
+              </button>
             </div>
           </div>
           <p className="disclaimer">JAS AI can make mistakes. Verify important information.</p>
